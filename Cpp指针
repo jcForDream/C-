@@ -1,0 +1,253 @@
+指针
+1.指针的基本概念
+指针的作用：可以通过指针间接访问内存。
+
+2.指针变量的定义和使用
+指针变量定义语法：数据类型 * 变量名;
+
+#include <iostream>
+using namespace std;
+ 
+int main()
+{
+	//1.定义指针
+	int a = 10;
+	//指针定义的语法： 数据类型 * 指针变量名;
+	int * p;
+	//让指针记录变量a的地址
+	p = &a; 
+	cout << "a的地址为:" << &a << endl;
+ 
+	//2.使用指针
+	//可以通过解引用的方式来找到指针指向的内存
+	//指针前加 * 代表解引用，找到指针指向的内存中的数据
+	*p = 1000;
+	cout << "a =" << a << endl;
+	cout << "*p = " << *p << endl;
+ 
+	system("pause");
+	return 0;
+}
+3.指针所占内存空间
+在32位操作系统下，指针是占4个字节空间大小，不管是什么数据类型
+在64位操作系统下，指针是占8个字节空间大小
+
+int a = 10;
+int * p1 = &a;
+ 
+//在32位操作系统下，指针是占4个字节空间大小，不管是什么数据类型
+//在64位操作系统下，指针是占8个字节空间大小
+ 
+cout << "sizeof(int *) = " << sizeof(int *) << endl;
+cout << "sizeof(int *) = " << sizeof(p) << endl;
+cout << "sizeof(int *) = " << sizeof(float *) << endl;
+cout << "sizeof(int *) = " << sizeof(double *) << endl;
+cout << "sizeof(int *) = " << sizeof(char *) << endl;
+4.空指针和野指针
+（1）空指针：指针变量指向内存中编号为0的空间
+
+         用途：初始化指针变量
+
+         注意：空指针指向的内存是不可以访问的
+
+（2）野指针：指针变量指向非法的内存空间
+
+#include <iostream>
+using namespace std;
+ 
+int main()
+{
+	//空指针
+	//1.空指针用于给指针变量进行初始化
+	int * p = NULL;
+ 
+	//2.空指针是不可以进行访问的
+	//0~255之间的内存编号是系统占用的，因此不可以访问
+	*p = 100;
+ 
+	//野指针
+	//在程序中，尽量避免出现野指针
+	int * p1 = (int *)0x1100;
+	cout << *p1 << endl;
+ 
+	system("pause");
+	return 0;
+}
+
+总结：空指针和野指针都不是我们申请的空间，因此不要访问。
+
+5.const修饰指针
+const修饰指针有三种情况：
+
+1.const修饰指针 ---常量指针
+
+
+
+2.const修饰常量 ---指针常量
+
+
+
+ 3.const即修饰指针，又修饰常量
+
+
+
+ 例子：
+
+#include <iostream>
+using namespace std;
+ 
+ 
+int main()
+{
+	//1.const修饰指针   常量指针
+	int a = 10;
+	int b = 10;
+ 
+	const int * p = &a;
+	//指针指向的值不可以改，指针的指向可以改
+	//*p = 20; 错误
+	p = &b;//正确
+ 
+	//2.const修饰常量   指针常量
+	//指针的指向不可以改，指针指向的值可以改
+	int * const p2 = &a;
+	*p2 = 100;//正确
+	//p2 = &b;//错误,指针的指向不可以改
+ 
+	//3.const修饰指针和常量
+	const int * const p3 = &a;
+	//指针的指向 和 指针指向的值 都不可以改
+	//*p3 = 100;//错误
+	//p3 = &b;//错误
+ 
+ 
+	system("pause");
+	return 0;
+}
+6.指针和数组
+作用：利用指针访问数组中的元素。
+
+#include<iostream>
+using namespace std;
+ 
+int main()
+{
+	//指针和数组
+	//数组：一段连续的内存空间中存放了相同类型的数据元素
+	int arr[10] = {1,2,3,4,5,6,7,8,9,10};
+ 
+	cout << "第一个元素为:" << arr[0] << endl;
+ 
+	int * p = arr;//数组名就是数组首地址  ，arr就是数组首地址
+ 
+	cout << "利用指针访问第一个元素为:" << *p << endl;
+ 
+	p++;
+ 
+	cout << "利用指针访问第二个元素为:" << *p << endl;
+ 
+	int * p2 = arr;
+	
+	cout << "数组长度" << sizeof(arr)/sizeof(arr[0]) << endl;
+ 
+	for (int i = 0; i < 10; i++)
+	{
+		cout<<*p2<<endl;
+		p2++;
+	}
+ 
+ 
+	system("pause");
+	return 0;
+}
+7.指针和函数
+作用：利用指针作函数参数，可以修改实参的值
+
+值传递不会改变实参的值，地址传递可以改变实参的值。
+
+#include<iostream>
+using namespace std;
+ 
+void swap01(int a,int b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+	cout << "swap a=" << a << endl;
+	cout << "swap b=" << b << endl;
+}
+ 
+void swap02(int *p1,int *p2)
+{
+	int temp = *p1;
+	*p1 = *p2;
+	*p2 = temp;
+}
+ 
+int main()
+{
+	//指针和函数
+	//1.值传递
+ 
+	int a = 10;
+	int b = 20;
+	swap01(a,b);   //值传递不会改变实参
+	cout << "a=" << a << endl;
+	cout << "b=" << b << endl;
+ 
+ 
+	//2.地址传递
+	//如果是地址传递，可以修饰实参
+	swap02(&a,&b);  //地址传递会改变实参
+	cout << "a=" << a << endl;
+	cout << "b=" << b << endl;
+ 
+	system("pause");
+	return 0;
+}
+8.指针、数组、函数
+#include<iostream>
+using namespace std;
+ 
+void bubbleSort(int * p,int len)
+{
+	//排序总轮数
+	for (int i = 0; i < len-1; i++)
+	{
+		//每轮对比数
+		for (int j = 0; j < len - i - 1; j++)
+		{
+			if(p[j]>p[j+1])
+			{
+				int temp = p[j];
+				p[j] = p[j+1];
+				p[j+1] = temp;
+			}
+		}
+	}
+	
+}
+ 
+void printArray(int * arr,int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		cout << arr[i] << endl;
+	}
+}
+ 
+int main()
+{
+	//1.先创建数组
+	int arr[10] = {4,3,6,9,1,2,10,8,7,5};
+	int len = sizeof(arr)/sizeof(arr[0]);
+ 
+	//2.创建函数，实现冒泡排序
+	bubbleSort(arr,len);
+ 
+	//3.打印排序后的数组
+	printArray(arr,len);
+ 
+	system("pause");
+	return 0;
+}
